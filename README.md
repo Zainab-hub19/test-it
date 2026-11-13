@@ -50,3 +50,11 @@ Bug 7 — Erreur 500 lors de la sérialisation JSON d'un livre emprunté (GET /b
     Cause : Une fois le livre emprunté, Book.borrower est un proxy Hibernate FetchType.LAZY (avec une relation bidirectionnelle vers Member.books), ce qui fait échouer la sérialisation Jackson en JSON hors transaction.
 
     Correction : Ajout de @JsonIgnore (ou @JsonIgnoreProperties) sur Book.borrower dans Book.java.
+
+### Bug 8 — Anomalies dans `BookService.borrowBook` (`PotentialStubbingProblem` & vérification de statut)
+* **Trace :** `PotentialStubbingProblem` à la ligne 55 de `BookServiceTest` lors de l'appel à `findByMemberAndStatus` avec `Status.RENDU`.
+* **Cause :** Trois erreurs dans `BookService.borrowBook` :
+  1. La vérification de disponibilité testait `book.getStatus() == Status.EMPRUNTE` au lieu de `book.getStatus() != Status.DISPONIBLE` (permettant d'emprunter un livre encore au statut `RENDU`).
+  2. La recherche des emprunts en cours filtrait sur `Status.RENDU` au lieu de `Status.EMPRUNTE`.
+  3. L'envoi de la notification par e-mail via `mailService.sendMail(...)` après l'emprunt était manquant.
+* **Correction :** Remplacement de la condition par `book.getStatus() != Status.DISPONIBLE`, interrogation de `findByMemberAndStatus(memberId, Status.EMPRUNTE)`, et ajout de l'appel à `mailService.sendMail(...)` avant `return saved;`.
