@@ -1,12 +1,13 @@
 package com.example.testit.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "book")
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -16,6 +17,7 @@ public class Book {
     private Status status = Status.DISPONIBLE;
 
     /** Dernier membre ayant emprunté le livre (null tant qu'il n'a jamais été emprunté). */
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "borrower_id")
     private Member borrower;

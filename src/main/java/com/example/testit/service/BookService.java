@@ -6,12 +6,16 @@ import com.example.testit.model.Member;
 import com.example.testit.model.Status;
 import com.example.testit.repository.BookRepository;
 import com.example.testit.repository.MemberRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class BookService {
 
     private final BookRepository bookRepository;

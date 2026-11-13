@@ -1,81 +1,52 @@
-# Test It - Prêt de livres
+Prénom : Zainab
+Nom : Karim
+## Bug 1 : borrowBook cherche les mauvais emprunts en cours
+- **Test qui l'a révélé** : BookServiceTest.emprunteUnLivreDisponibleEtPrevientLeMembre
+- **Message** : PotentialStubbingProblem (le test stubbait findByMemberAndStatus(10, EMPRUNTE), le service appelait avec RENDU)
+- **Cause** : dans BookService.borrowBook, la vérification utilisait Status.RENDU au lieu de Status.EMPRUNTE
+- **Code ou test ?** Le code. Le README dit qu'on refuse l'emprunt si le membre a déjà un livre EMPRUNTE.
 
-API REST Spring Boot (Java 25) de prêt de livres pour une bibliothèque.
-**Le code est fourni : votre travail est d'écrire les tests, ce sont eux qui vous diront si tout va bien.**
+Bug 3 — XML Liquibase invalide (SAXParseException)
 
-## Le métier en 30 secondes
+    Trace : SAXParseException ← XMLChangeLogSAXParser au démarrage de Spring.
 
-Un livre passe par 3 statuts : `DISPONIBLE` → `EMPRUNTE` → `RENDU`
+    Cause : Attribut obligatoire constraintName manquant sur <addForeignKeyConstraint>.
 
-| Action | Autorisée si | Mails envoyés |
-|---|---|---|
-| Emprunter | le livre est `DISPONIBLE` **et** le membre n'a pas déjà un livre `EMPRUNTE` | au membre |
-| Rendre | le livre est `EMPRUNTE` **et** c'est ce membre qui l'a emprunté | au membre, et à son bibliothécaire référent s'il en a un |
+    Correction : Ajout de constraintName="fk_members_referent" dans 001-create-members-table.xml et constraintName="fk_book_borrower" dans 002-create-book-table.xml.
 
-Sinon, le service lève une exception (`IllegalArgumentException` ou `IllegalStateException`).
+Bug 3 — Types et noms incompatibles en SQL (JdbcSQLSyntaxErrorException)
 
-## Où est le code ?
+    Trace : Values of types "UUID" and "BIGINT" are not comparable sur referent_id.
 
-```
-controller/BookController     endpoints REST
-service/BookService           règles métier (c'est le cœur du TD)
-repository/BookRepository     accès base (JPA)
-adapter/mail                  envoi de mails (fake : il écrit dans les logs)
-adapter/member                membre connecté (fake : on choisit qui avec setCurrent)
-```
+    Cause : Dans 001-create-members-table.xml, referent_id était en uuid alors que members.id est en bigint, et la colonne user (mot-clé réservé SQL) ne correspondait pas à username dans Member.
 
-## API
+    Correction : Passage de referent_id à bigint et renommage de user en username dans 001 (et correction du nom de contrainte dupliqué dans 002).
 
-| Méthode | URL | Rôle |
-|---|---|---|
-| GET | `/books` | tous les livres |
-| GET | `/books/{id}` | un livre (404 si absent) |
-| GET | `/books/member/{memberId}` | livres d'un membre |
-| POST | `/books` | créer `{title, author}`, les deux obligatoires (400 sinon) |
-| PUT | `/books/{id}` | modifier (404 si absent) |
-| DELETE | `/books/{id}` | supprimer |
-| POST | `/books/{id}/borrow` | emprunter (400 si refusé) |
-| POST | `/books/{id}/return` | rendre (400 si refusé) |
+Bug 4 — Désynchronisation JPA / Base (SchemaManagementException)
 
-## Lancer
+    Trace : Schema validation: missing table [member].
 
-```
-./gradlew test      # lance vos tests
-./gradlew bootRun   # lance l'application sur http://localhost:8080
-```
+    Cause : Liquibase crée la table members avec autoIncrement, tandis que Member cherchait member et Book utilisait GenerationType.SEQUENCE.
 
-Base H2 en mémoire, console sur http://localhost:8080/h2-console
+    Correction : Ajout de @Table(name = "members") sur Member.java et passage à GenerationType.IDENTITY sur Book.id.
 
-## Le TD
+### Bug 5 — Session Hibernate fermée dans `BookService` (`LazyInitializationException`)
+* **Trace :** `org.hibernate.LazyInitializationException` lors de l'appel à `BookService.returnBook` (ligne 49 de `BookServiceIT`).
+* **Cause :** Dans `Book.java` et `Member.java`, les relations `borrower` et `referent` sont en `FetchType.LAZY`. Comme `BookService` n'a pas d'annotation `@Transactional`, la session Hibernate se ferme immédiatement après `bookRepository.findById(bookId)`, empêchant le chargement de `member.getReferent()`.
+* **Correction :** Ajout de `@Transactional` (et de l'import `org.springframework.transaction.annotation.Transactional`) au-dessus de la classe `BookService` dans `src/main/java/com/example/testit/service/BookService.java`.
 
-Écrivez les tests dans `src/test/java/com/example/testit/`, un fichier par exercice.
-**Minimum attendu : 1 test par exercice.** Si vous avez du temps, ajoutez-en.
+Bug 6 — Bugs dans BookController (AssertionError)
 
-| # | Fichier | Type | Test minimum |
-|---|---|---|---|
-| 1 | `BookServiceTest` | unitaire, tout est mocké (Mockito), sans Spring ni base | Emprunter un livre disponible : vérifiez le statut, l'emprunteur **et les mails envoyés** |
-| 2 | `BookRepositoryIT` | JPA, vraie base H2 | `findByMemberAndStatus` avec **deux membres** et plusieurs livres |
-| 3 | `BookServiceIT` | contexte Spring complet, vraie base | Emprunter puis rendre un livre, et relire le résultat |
-| 4 | `BookControllerIT` | MockMvc | Créer un livre puis l'emprunter, et vérifier les réponses |
+    Trace : AssertionError sur $.author (puis status().isOk() lors de l'emprunt) dans BookControllerIT.
 
-Un test qui échoue n'est pas un problème : c'est **ce que vous cherchez**. Notez ce qu'il révèle (le code ou le test ?) puis corrigez.
+    Cause : createBook passait (request.title, request.title) au lieu de request.author, et POST /books/{id}/borrow appelait bookService.returnBook(...) au lieu de bookService.borrowBook(...).
 
-## Bonus (si vous avez fini)
+    Correction : Passage de request.author dans createBook et appel à bookService.borrowBook(id, memberId) dans borrowBook.
 
-Dans l'ordre que vous voulez, un test par idée :
+Bug 7 — Erreur 500 lors de la sérialisation JSON d'un livre emprunté (GET /books/{id})
 
-- **Cas d'erreur du service** : livre ou membre inconnu, livre déjà emprunté, membre qui a déjà un livre en cours.
-- **Retour d'un livre** : par un autre membre que l'emprunteur, et avec ou sans référent (qui doit être prévenu ?).
-- **Modifier un livre** (`PUT`) qui est déjà emprunté : que devient son statut ?
-- **Supprimer** un livre qui n'existe pas.
-- **Personne n'est connecté** et on emprunte un livre : que se passe-t-il ?
-- **Validation** : `POST /books` avec un titre ou un auteur vide.
-- **TDD** : écrivez le test d'abord, regardez-le échouer, puis corrigez le code.
-- **Fake plutôt que mock** : remplacez le mock de `MailService` par un fake qui garde les mails envoyés dans une liste.
+    Trace : Status expected:<200> but was:<500> à la ligne 56 de BookControllerIT.
 
-## Conseils
+    Cause : Une fois le livre emprunté, Book.borrower est un proxy Hibernate FetchType.LAZY (avec une relation bidirectionnelle vers Member.books), ce qui fait échouer la sérialisation Jackson en JSON hors transaction.
 
-- Nommez vos tests comme des phrases : `refuseLEmpruntSiLeLivreEstDejaEmprunte`.
-- Un test = un comportement. Structure *Given / When / Then*.
-- Un test que vous n'avez jamais vu échouer ne prouve rien : cassez volontairement le service pour vérifier qu'il devient rouge.
-- Ne testez pas vos mocks : testez une décision du code (un `if`, un calcul, un appel ou un non-appel).
+    Correction : Ajout de @JsonIgnore (ou @JsonIgnoreProperties) sur Book.borrower dans Book.java.

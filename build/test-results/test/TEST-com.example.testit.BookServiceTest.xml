@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.testit.BookServiceTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2026-11-13T16:47:56.239Z" hostname="zainab-HP-Laptop-15s-fq2xxx" time="0.451">
+  <properties/>
+  <testcase name="emprunteUnLivreDisponibleEtPrevientLeMembre()" classname="com.example.testit.BookServiceTest" time="0.45">
+    <failure message="org.mockito.exceptions.misusing.PotentialStubbingProblem: &#10;Strict stubbing argument mismatch. Please check:&#10; - this invocation of 'findByMemberAndStatus' method:&#10;    bookRepository.findByMemberAndStatus(&#10;    10L,&#10;    RENDU&#10;);&#10;    -&gt; at com.example.testit.service.BookService.borrowBook(BookService.java:67)&#10; - has following stubbing(s) with different arguments:&#10;    1. bookRepository.findByMemberAndStatus(&#10;    10L,&#10;    EMPRUNTE&#10;); stubbed with: [Returns: []]&#10;      -&gt; at com.example.testit.BookServiceTest.emprunteUnLivreDisponibleEtPrevientLeMembre(BookServiceTest.java:51)&#10;Typically, stubbing argument mismatch indicates user mistake when writing tests.&#10;Mockito fails early so that you can debug potential problem easily.&#10;However, there are legit scenarios when this exception generates false negative signal:&#10;  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API&#10;    Please use 'will().given()' or 'doReturn().when()' API for stubbing.&#10;  - stubbed method is intentionally invoked with different arguments by code under test&#10;    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).&#10;For more information see javadoc for PotentialStubbingProblem class." type="org.mockito.exceptions.misusing.PotentialStubbingProblem">org.mockito.exceptions.misusing.PotentialStubbingProblem: 
+Strict stubbing argument mismatch. Please check:
+ - this invocation of 'findByMemberAndStatus' method:
+    bookRepository.findByMemberAndStatus(
+    10L,
+    RENDU
+);
+    -&gt; at com.example.testit.service.BookService.borrowBook(BookService.java:67)
+ - has following stubbing(s) with different arguments:
+    1. bookRepository.findByMemberAndStatus(
+    10L,
+    EMPRUNTE
+); stubbed with: [Returns: []]
+      -&gt; at com.example.testit.BookServiceTest.emprunteUnLivreDisponibleEtPrevientLeMembre(BookServiceTest.java:51)
+Typically, stubbing argument mismatch indicates user mistake when writing tests.
+Mockito fails early so that you can debug potential problem easily.
+However, there are legit scenarios when this exception generates false negative signal:
+  - stubbing the same method multiple times using 'given().will()' or 'when().then()' API
+    Please use 'will().given()' or 'doReturn().when()' API for stubbing.
+  - stubbed method is intentionally invoked with different arguments by code under test
+    Please use default or 'silent' JUnit Rule (equivalent of Strictness.LENIENT).
+For more information see javadoc for PotentialStubbingProblem class.
+	at com.example.testit.service.BookService.borrowBook(BookService.java:67)
+	at com.example.testit.BookServiceTest.emprunteUnLivreDisponibleEtPrevientLeMembre(BookServiceTest.java:55)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

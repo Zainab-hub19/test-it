@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.testit.BookServiceIT" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-13T16:47:55.717Z" hostname="zainab-HP-Laptop-15s-fq2xxx" time="0.518">
+  <properties/>
+  <testcase name="emprunterPuisRendreUnLivre()" classname="com.example.testit.BookServiceIT" time="0.063"/>
+  <system-out><![CDATA[2026-11-13T17:47:55.719+01:00  INFO 25542 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.testit.BookServiceIT]: BookServiceIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-13T17:47:55.720+01:00  INFO 25542 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.testit.TestItApplication for test class com.example.testit.BookServiceIT
+2026-11-13T17:47:55.721+01:00  INFO 25542 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.testit.BookServiceIT]: BookServiceIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-11-13T17:47:55.722+01:00  INFO 25542 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.testit.TestItApplication for test class com.example.testit.BookServiceIT
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.1.2)
+
+2026-11-13T17:47:55.740+01:00  INFO 25542 --- [    Test worker] com.example.testit.BookServiceIT         : Starting BookServiceIT using Java 26.0.2.1 with PID 25542 (started by zainab in /home/zainab/test-it)
+2026-11-13T17:47:55.741+01:00  INFO 25542 --- [    Test worker] com.example.testit.BookServiceIT         : No active profile set, falling back to 1 default profile: "default"
+2026-11-13T17:47:55.845+01:00  INFO 25542 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-11-13T17:47:55.852+01:00  INFO 25542 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 6 ms. Found 2 JPA repository interfaces.
+2026-11-13T17:47:55.897+01:00  INFO 25542 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-11-13T17:47:55.898+01:00  INFO 25542 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection conn15: url=jdbc:h2:mem:testdb user=SA
+2026-11-13T17:47:55.898+01:00  INFO 25542 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-11-13T17:47:55.900+01:00  INFO 25542 --- [    Test worker] liquibase.database                       : Set default schema name to PUBLIC
+2026-11-13T17:47:55.936+01:00  INFO 25542 --- [    Test worker] liquibase.changelog                      : Reading from PUBLIC.DATABASECHANGELOG
+2026-11-13T17:47:55.961+01:00  INFO 25542 --- [    Test worker] liquibase.ui                             : Database is up to date, no changesets to execute
+2026-11-13T17:47:55.962+01:00  INFO 25542 --- [    Test worker] liquibase.changelog                      : Reading from PUBLIC.DATABASECHANGELOG
+2026-11-13T17:47:55.965+01:00  INFO 25542 --- [    Test worker] liquibase.util                           : UPDATE SUMMARY
+2026-11-13T17:47:55.965+01:00  INFO 25542 --- [    Test worker] liquibase.util                           : Run:                          0
+2026-11-13T17:47:55.965+01:00  INFO 25542 --- [    Test worker] liquibase.util                           : Previously run:               2
+2026-11-13T17:47:55.965+01:00  INFO 25542 --- [    Test worker] liquibase.util                           : Filtered out:                 0
+2026-11-13T17:47:55.965+01:00  INFO 25542 --- [    Test worker] liquibase.util                           : -------------------------------
+2026-11-13T17:47:55.965+01:00  INFO 25542 --- [    Test worker] liquibase.util                           : Total change sets:            2
+2026-11-13T17:47:55.965+01:00  INFO 25542 --- [    Test worker] liquibase.util                           : Update summary generated
+2026-11-13T17:47:55.965+01:00  INFO 25542 --- [    Test worker] liquibase.command                        : Command execution complete
+2026-11-13T17:47:55.978+01:00  INFO 25542 --- [    Test worker] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-11-13T17:47:55.994+01:00  INFO 25542 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-11-13T17:47:55.995+01:00  WARN 25542 --- [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-11-13T17:47:55.995+01:00  INFO 25542 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:h2:mem:testdb]
+	Database driver: H2 JDBC Driver
+	Database dialect: H2Dialect
+	Database version: 2.4.240
+	Default catalog/schema: TESTDB/PUBLIC
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: 100
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-11-13T17:47:56.030+01:00  INFO 25542 --- [    Test worker] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-11-13T17:47:56.032+01:00  INFO 25542 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-11-13T17:47:56.170+01:00  INFO 25542 --- [    Test worker] com.example.testit.BookServiceIT         : Started BookServiceIT in 0.444 seconds (process running for 9.05)
+2026-11-13T17:47:56.230+01:00  INFO 25542 --- [    Test worker] c.e.testit.adapter.mail.MailServiceFake  : Fake Mail to Zai: Livre rendu - Merci d'avoir rendu 'Dune'.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

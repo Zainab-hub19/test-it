@@ -19,3 +19,5 @@ public interface MailService {
     void sendMailCloture(Member member);
 
 }
+
+
